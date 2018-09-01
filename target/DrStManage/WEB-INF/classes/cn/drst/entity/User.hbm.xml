@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="cn.drst.entity.User" table="user" schema="drst_master">
+        <id name="userId" column="UserId"/>
+        <property name="roleId" column="RoleId"/>
+        <property name="accounts" column="Accounts"/>
+        <property name="password" column="Password"/>
+        <property name="departmentId" column="DepartmentId"/>
+        <property name="name" column="Name"/>
+        <property name="sex" column="Sex"/>
+        <property name="phone" column="Phone"/>
+        <property name="remember" column="Remember"/>
+    </class>
+</hibernate-mapping>

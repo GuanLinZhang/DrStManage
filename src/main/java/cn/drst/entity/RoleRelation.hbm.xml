@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="cn.drst.entity.RoleRelation" table="rolerelation" schema="">
+        <composite-id mapped="true" class="cn.drst.entity.RoleRelationPK">
+            <key-property name="roleId" column="RoleId"/>
+            <key-property name="permissionGroupId" column="PermissionGroupId"/>
+        </composite-id>
+    </class>
+</hibernate-mapping>

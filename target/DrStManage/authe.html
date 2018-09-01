@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>健益云</title>
+    <script src="js/jquery/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/authe.css">
+</head>
+<body>
+<div class="title">
+    <span>健益云管家</span>
+</div>
+<div class="title_sub">
+    <span>你开诊所健益云帮你管家</span>
+</div>
+<div class="content_div">
+    <div class="content_left_div"></div>
+    <div class="content_right_div">
+        <div class="content_title">
+            <span>欢迎使用门诊管理系统</span>
+        </div>
+        <div class="content_right_num">
+                <form>
+                    <input type="text" id="OrganizationNumber"  name="title" class="content_right_form"
+                           autocomplete="off" placeholder="请输入你的机构编号">
+
+                <div class="content_right_message">
+                    <span id="Message" hidden>机构编号不能为空</span>
+                </div>
+                </form>
+        </div>
+        <div class="content_right_confirm_div">
+                <button  id="Confirm" class="content_right_confirm">确认</button>
+        </div>
+
+</div>
+<script>
+
+    $("#Confirm").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "./FindClinic.do",
+            dataType: "json",
+            traditional: true,
+            contentType: "application/x-www-form-urlencoded",
+            data: {
+                OrganizationNumber: $("#OrganizationNumber").val(),
+                token: "123456789"
+            },
+            success: function (data) {
+
+            if (data == "1") {
+                window.location.href = "./success.html";//需要跳转的地址
+            } else {
+                alert("该编号不存在");
+            }
+        },
+        error: function () {
+            alert("失败");
+        }
+
+    })
+    })
+</script>
+</body>
+</html>

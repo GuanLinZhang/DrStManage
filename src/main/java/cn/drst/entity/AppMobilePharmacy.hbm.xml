@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="cn.drst.entity.AppMobilePharmacy" table="appmobile_pharmacy" schema="drst_master">
+        <id name="id" column="Id">
+            <generator class="identity"/>
+        </id>
+        <property name="pharmacyName" column="PharmacyName"/>
+        <property name="legalName" column="LegalName"/>
+        <property name="phone" column="Phone"/>
+        <property name="telephone" column="Telephone"/>
+        <property name="businessLicenseNumber" column="BusinessLicenseNumber"/>
+        <property name="mainScope" column="MainScope"/>
+        <property name="businessLiceseImage" column="BusinessLiceseImage"/>
+        <property name="synopsis" column="Synopsis"/>
+        <property name="registerDate" column="RegisterDate"/>
+    </class>
+</hibernate-mapping>

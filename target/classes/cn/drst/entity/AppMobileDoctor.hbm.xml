@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="cn.drst.entity.AppMobileDoctor" table="appmobile_doctor" schema="drst_master">
+        <id name="id" column="Id"/>
+        <property name="name" column="Name"/>
+        <property name="sex" column="Sex"/>
+        <property name="birthday" column="Birthday"/>
+        <property name="idNumber" column="IdNumber"/>
+        <property name="headImage" column="HeadImage"/>
+        <property name="phone" column="Phone"/>
+        <property name="titles" column="Titles"/>
+        <property name="qualification" column="Qualification"/>
+        <property name="qualificationNumber" column="QualificationNumber"/>
+        <property name="affiliatedHospital" column="AffiliatedHospital"/>
+        <property name="department" column="Department"/>
+        <property name="major" column="Major"/>
+        <property name="synopsis" column="Synopsis"/>
+        <property name="titlesImage" column="TitlesImage"/>
+        <property name="registerDate" column="RegisterDate"/>
+    </class>
+</hibernate-mapping>

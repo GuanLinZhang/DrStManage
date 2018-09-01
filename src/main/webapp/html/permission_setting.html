@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>健益云1</title>
+    <script src="../js/jquery/jquery-3.3.1.min.js"></script>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        table tr {
+            border: 1px solid #ddd;
+        }
+        table td,table th {
+            padding:5px;
+            text-align: center;
+        }
+        table th{
+            background-color: #8af6ff;
+        }
+    </style>
+</head>
+<body>
+    这个页面是角色权限设置页面
+    <br><br>
+    <input type="button" id="SearchUser" value="查询用户"/>
+    <input type="button" id="SearchRole" value="查询角色"/>
+    <input type="button" id="SearchPermissionGroup" value="查询权限组"/>
+    <input type="button" id="SearchPermission" value="查询权限"/>
+    <input type="button" id="AllotRole" value="分配角色"/>
+    <input type="button" id="SetPermissionRelation" value="设置权限关联"/>
+    <input type="button" id="SetRoleRelation" value="设置角色关联"/>
+    <input type="button" id="ChangePermissionRelation" value="更改权限关联"/>
+    <input type="button" id="ChangeRoleRelation" value="更改角色关联"/>
+    <br><br>
+    <span>用户列表</span>
+    <br>
+    <table>
+        <thead>
+        <tr>
+            <th>设置</th>
+            <th>用户编号</th>
+            <th>角色</th>
+            <th>帐号</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="tbUser">
+        </tbody>
+    </table>
+    <span>角色列表</span>
+    <br>
+    <select id="RoleList" multiple="true" size="10" title="角色">
+    </select>
+    <br><br>
+    <span>权限组列表</span>
+    <br>
+    <select id="PermissionGroupList" multiple="true" size="10">
+    </select>
+    <br><br>
+    <span>权限列表</span>
+    <br>
+    <table>
+        <thead>
+        <tr>
+            <th>设置</th>
+            <th>权限编号</th>
+            <th>权限名称</th>
+            <th>权限说明</th>
+            <th>权限状态</th>
+        </tr>
+        </thead>
+        <tbody id="tbPermission">
+        </tbody>
+    </table>
+    <br>
+    <div>
+        <div>
+            添加新权限组
+            <br><br>
+            <label>新权限组名：</label><input type="text" id="PermissionGroupName"/>
+            <br><br>
+            <input type="button" id="AddPermissionGroup" value="添加新权限组"/>
+            <br><br>
+            <span>======================================================================</span>
+            <br><br>
+        </div>
+        <div>
+            添加新权限
+            <br><br>
+            <label>添加新权限：</label><input type="text" id="PermissionName"/>
+            <br>
+            <label>新权限说明：</label><input type="text" id="permissionExplain"/>
+            <br><br>
+            <input type="button" id="AddPermission" value="添加新权限"/>
+            <br><br>
+            <span>======================================================================</span>
+            <br><br>
+        </div>
+    </div>
+    <div>
+        查询用户所拥有的权限
+        <br><br>
+        <label>用户帐号：</label><input type="text" id="SearchAccounts"/>
+        <br><br>
+        <input type="button" id="SearchUserPermission" value="查询用户权限"/>
+        <br><br>
+        <table>
+            <thead>
+            <tr>
+                <th>权限编号</th>
+                <th>权限名称</th>
+                <th>权限说明</th>
+            </tr>
+            </thead>
+            <tbody id="tbUserPermission">
+            </tbody>
+        </table>
+        <br><br>
+    </div>
+    <script>
+        $(function () {
+            // 查询所有用户
+            $.ajax({
+                type: "POST",
+                url: "./SearchUserRole.do",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state === 100) {
+                        var length = data.retData.listData.length;
+                        for (var i = 0; i < length; i++) {
+                            // 动态创建一个tr行标签,并且转换成jQuery对象
+                            var $trTemp = $("<tr></tr>");
+                            // 往行里面追加 td单元格
+                            $trTemp.append("<td><input name=\"allot\" type=\"radio\" value=\"" + data.retData.listData[i].userId + "\" /></td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].userId + "</td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].message + "</td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].accounts + "</td>");
+                            $trTemp.append("<td><input type=\"button\" value=\"解除角色\" onclick=\"clearRole('" + data.retData.listData[i].userId + "')\"/></td>");
+                            $trTemp.appendTo("#tbUser");
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+
+            // 查询所有权限
+            $.ajax({
+                type: "POST",
+                url: "./SearchPermission.do",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state === 100) {
+                        var length = data.retData.listData.length;
+                        for (var i = 0; i < length; i++) {
+                            // 动态创建一个tr行标签,并且转换成jQuery对象
+                            var $trTemp = $("<tr></tr>");
+                            // 往行里面追加 td单元格
+                            $trTemp.append("<td><input name=\"permission\" type=\"checkbox\" value=\"" + data.retData.listData[i].permissionId + "\" /></td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].permissionId + "</td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].permissionName + "</td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].permissionExplain + "</td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].permissionVisible + "</td>");
+                            $trTemp.appendTo("#tbPermission");
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+
+            // 查询所有权限组
+            $.ajax({
+                type: "POST",
+                url: "./SearchPermissionGroup.do",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state === 100) {
+                        var length = data.retData.listData.length;
+                        for (var i = 0; i < length; i++) {
+                            $("#PermissionGroupList").append("<option value=\"" + data.retData.listData[i].permissionGroupId + "\">" + data.retData.listData[i].permissionGroupName + "</option>");
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+
+            // 查询所有角色
+            $.ajax({
+                type: "POST",
+                url: "./SearchRole.do",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state === 100) {
+                        var length = data.retData.listData.length;
+                        for (var i = 0; i < length; i++) {
+                            $("#RoleList").append("<option value=\"" + data.retData.listData[i].roleId + "\">" + data.retData.listData[i].roleName + "</option>");
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 查询所有用户
+        $("#SearchUser").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "./SearchUserRole.do",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state === 100) {
+                        var length = data.retData.listData.length;
+                        for (var i = 0; i < length; i++) {
+                            // 动态创建一个tr行标签,并且转换成jQuery对象
+                            var $trTemp = $("<tr></tr>");
+                            // 往行里面追加 td单元格
+                            $trTemp.append("<td><input name=\"allot\" type=\"radio\" value=\"" + data.retData.listData[i].userId + "\" /></td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].userId + "</td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].message + "</td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].accounts + "</td>");
+                            $trTemp.append("<td><input type=\"button\" value=\"解除角色\" onclick=\"clearRole('" + data.retData.listData[i].userId + "')\"/></td>");
+                            $trTemp.appendTo("#tbUser");
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 删除角色
+        function clearRole(userId) {
+            $.ajax({
+                type: "POST",
+                url: "./ClearRole.do",
+                dataType: "json",
+                data: {userId: userId},
+                success: function (data) {
+                    if (data.state === 100) {
+                        alert("解除角色成功")
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        }
+
+        // 查询所有角色
+        $("#SearchRole").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "./SearchRole.do",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state === 100) {
+                        var length = data.retData.listData.length;
+                        for (var i = 0; i < length; i++) {
+                            $("#RoleList").append("<option value=\"" + data.retData.listData[i].roleId + "\">" + data.retData.listData[i].roleName + "</option>");
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 查询所有权限组
+        $("#SearchPermissionGroup").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "./SearchPermissionGroup.do",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state === 100) {
+                        var length = data.retData.listData.length;
+                        for (var i = 0; i < length; i++) {
+                            $("#PermissionGroupList").append("<option value=\"" + data.retData.listData[i].permissionGroupId + "\">" + data.retData.listData[i].permissionGroupName + "</option>");
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 查询所有权限
+        $("#SearchPermission").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "./SearchPermission.do",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state === 100) {
+                        var length = data.retData.listData.length;
+                        for (var i = 0; i < length; i++) {
+                            // 动态创建一个tr行标签,并且转换成jQuery对象
+                            var $trTemp = $("<tr></tr>");
+                            // 往行里面追加 td单元格
+                            $trTemp.append("<td><input name=\"permission\" type=\"checkbox\" value=\"" + data.retData.listData[i].permissionId + "\" /></td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].permissionId + "</td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].permissionName + "</td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].permissionExplain + "</td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].permissionVisible + "</td>");
+                            $trTemp.appendTo("#tbPermission");
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 分配用户角色
+        $("#AllotRole").click(function () {
+            //var json = {userId:$("input:radio[name=allot]:checked").val(),roleId:$("#RoleList").val()};
+            $.ajax({
+                type: "POST",
+                url: "./AllotRole.do",
+                dataType: "json",
+                traditional: true, //traditional 为true阻止深度序列化
+                data: {
+                    userId: $("input:radio[name=allot]:checked").val(),
+                    roleId: $("#RoleList").val()
+                },
+                success: function (data) {
+                    if (data.state === 100) {
+                        alert("分配角色成功");
+                    } else {
+                        alert(data.message)
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 设置权限与权限组关联
+        $("#SetPermissionRelation").click(function () {
+            var id_array = [];
+            $('input[name="permission"]:checked').each(function () {
+                id_array.push($(this).val());//向数组中添加元素
+            });
+            $.ajax({
+                type: "POST",
+                url: "./SetPermissionRelation.do",
+                traditional: true, //traditional 为true阻止深度序列化
+                dataType: "json",
+                data: {
+                    permissionGroupId: $("#PermissionGroupList").val(),
+                    permissionIds: id_array
+                },
+                success: function (data) {
+                    if (data.state === 100) {
+                        alert("权限与权限组关联成功");
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 设置角色与权限组关联
+        $("#SetRoleRelation").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "./SetRoleRelation.do",
+                dataType: "json",
+                traditional: true, //traditional 为true阻止深度序列化
+                data: {
+                    roleId: $("#RoleList").val(),
+                    permissionGroupId: $("#PermissionGroupList").val()
+                },
+                success: function (data) {
+                    if (data.state === 100) {
+                        alert("角色与权限组关联成功");
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 创建新用户
+        $("#CreateUser").click(function () {
+            // json里的字段名一定要和entity里的一样
+            var json = {
+                accounts: $("#Accounts").val(),
+                name: $("#Name").val(),
+                sex: $("input:radio[name=sex]:checked").val(),
+                phone: $("#Phone").val()
+            };
+            // url:"../"是根目录，"./"是同目录,".do"是在Web.xml中配置
+            $.ajax({
+                type: "POST",
+                url: "./CreateUser.do",
+                contentType: 'application/json',
+                dataType: "json",
+                data: JSON.stringify(json),//json对象转换json字符串
+                success: function (data) {
+                    if (data.state === 100) {
+                        alert("创建新用户成功");
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 添加新权限
+        $("#AddPermission").click(function () {
+            // json里的字段名一定要和entity里的一样
+            var json = {permissionName: $("#PermissionName").val(), permissionExplain: $("#permissionExplain").val()};
+            // url:"../"是根目录，"./"是同目录,".do"是在Web.xml中配置
+            $.ajax({
+                type: "POST",
+                url: "./CreatePermission.do",
+                contentType: 'application/json',
+                dataType: "json",
+                data: JSON.stringify(json),//json对象转换json字符串
+                success: function (data) {
+                    if (data.state === 100) {
+                        alert("创建新权限成功");
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 添加新权限组
+        $("#AddPermissionGroup").click(function () {
+            // json里的字段名一定要和entity里的一样
+            var json = {permissionGroupName: $("#PermissionGroupName").val()};
+            // url:"../"是根目录，"./"是同目录,".do"是在Web.xml中配置
+            $.ajax({
+                type: "POST",
+                url: "./CreatePermissionGroup.do",
+                contentType: 'application/json',
+                dataType: "json",
+                data: JSON.stringify(json),//json对象转换json字符串
+                success: function (data) {
+                    if (data.state === 100) {
+                        alert("创建新权限成功");
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 查询用户所拥有的权限
+        $("#SearchUserPermission").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "./SearchUserPermission.do",
+                dataType: "json",
+                data: {searchAccounts: $("#SearchAccounts").val()},
+                success: function (data) {
+                    if (data.state === 100) {
+                        var length = data.retData.listData.length;
+                        for (var i = 0; i < length; i++) {
+                            // 动态创建一个tr行标签,并且转换成jQuery对象
+                            var $trTemp = $("<tr></tr>");
+                            // 往行里面追加 td单元格
+                            $trTemp.append("<td>" + data.retData.listData[i].permissionId + "</td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].permissionName + "</td>");
+                            $trTemp.append("<td>" + data.retData.listData[i].permissionExplain + "</td>");
+                            $trTemp.appendTo("#tbUserPermission");
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 表示角色对应的权限组
+        $('#RoleList').change(function () {
+            $.ajax({
+                type: "POST",
+                url: "./DisplayPermissionGroup.do",
+                dataType: "json",
+                traditional: true, //traditional 为true阻止深度序列化
+                data: {roleId: $('#RoleList').val()},
+                success: function (data) {
+                    if (data.state === 100) {
+                        $("#PermissionGroupList").val(data.retData.listData[0].permissionGroupId);
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 表示权限组对应的权限
+        $('#PermissionGroupList').change(function () {
+            $.ajax({
+                type: "POST",
+                url: "./DisplayPermission.do",
+                dataType: "json",
+                traditional: true, //traditional 为true阻止深度序列化
+                data: {permissionGroupId: $('#PermissionGroupList').val()},
+                success: function (data) {
+                    if (data.state === 100) {
+                        var length = data.retData.listData.length;
+                        for (var i = 0; i < length; i++) {
+                            $("input:checkbox[value='" + data.retData.listData[i].permissionId + "']").attr('checked', true);
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 更改权限与权限组关联
+        $("#ChangePermissionRelation").click(function () {
+            var id_array = [];
+            $('input[name="permission"]:checked').each(function () {
+                id_array.push($(this).val());//向数组中添加元素
+            });
+            $.ajax({
+                type: "POST",
+                url: "./ChangePermissionRelation.do",
+                traditional: true, //traditional 为true阻止深度序列化
+                dataType: "json",
+                data: {
+                    permissionGroupId: $("#PermissionGroupList").val(),
+                    permissionIds: id_array
+                },
+                success: function (data) {
+                    if (data.state === 100) {
+                        alert("更改权限与权限组关联成功");
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 设置角色与权限组关联
+        $("#ChangeRoleRelation").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "./changeRoleRelation.do",
+                dataType: "json",
+                traditional: true, //traditional 为true阻止深度序列化
+                data: {
+                    roleId: $("#RoleList").val(),
+                    permissionGroupId: $("#PermissionGroupList").val()
+                },
+                success: function (data) {
+                    if (data.state === 100) {
+                        alert("更改角色与权限组关联成功");
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

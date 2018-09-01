@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <div align="center" ><input  id="load" type="button"  style="width:100px;height:50px;" value="登陆"></div>
+</body>
+<script>
+    $("#load").click(function () {
+        alert("1111111111111");
+        $.ajax({
+            type: "POST",
+            url: "./FindClinic.do",
+            dataType: "json",
+            success: function (data) {
+                if (data == 0) {
+                    window.location.href = "./authe.html";//没登陆去登陆页面
+                } else {
+                    window.location.href = "./index.html";//登陆过了
+                }
+            },
+            error: function () {
+                alert("失败");
+            }
+
+        })
+    })
+</script>
+</html>

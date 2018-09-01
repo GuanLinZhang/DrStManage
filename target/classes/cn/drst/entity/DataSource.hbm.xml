@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="cn.drst.entity.DataSource" table="datasource" schema="drst_master">
+        <id name="sourceId" column="SourceId"/>
+        <property name="organizationNumber" column="OrganizationNumber"/>
+        <property name="sourceName" column="SourceName"/>
+        <property name="sourceState" column="SourceState"/>
+        <property name="dataBaseName" column="DataBaseName"/>
+        <property name="driverClass" column="DriverClass"/>
+        <property name="jdbcUrl" column="JdbcUrl"/>
+        <property name="userName" column="UserName"/>
+        <property name="password" column="Password"/>
+        <property name="sourceType" column="SourceType"/>
+    </class>
+</hibernate-mapping>

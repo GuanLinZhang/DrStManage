@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>健益云</title>
+    <script src="js/jquery/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        html {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%
+        }
+
+        header {
+            height: 50px;
+        }
+
+        nav {
+            float: right;
+            height: 30px;
+        }
+
+        section {
+            position: absolute;
+            border-radius: 5px 5px 5px 5px;
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        aside {
+            border-radius: 5px 5px 5px 5px;
+            text-align: left;
+            position: absolute;
+            display: flex;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        article {
+            position: absolute;
+            border-radius: 5px 5px 5px 5px;
+            margin: 0 0 0 200px;
+            height: 100%;
+            width: 100%;
+            background-color: #EEEEEE;
+        }
+
+        /*footer{
+            border-radius:5px 5px 5px 5px;
+            text-align:left;
+            height:25px;
+        }*/
+        /*去掉列表前的圆点*/
+        ul {
+            list-style-type: none;
+        }
+
+        .frame_header_div {
+            position: relative;
+            margin-left: 1%;
+            top: 8px;
+            font-size: 30px;
+        }
+
+        .sub_menue {
+            display: none; /*先将子菜单设置为隐藏*/
+        }
+
+        .aside_top {
+            margin-top: 35px;
+            margin-left: 10%;
+            height: 100px;
+        }
+
+        .aside_title {
+            margin-top: 15px;
+            margin-left: 13%;
+            font-size: 125% !important;
+        }
+
+        .layui_nav_img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+    <body>
+    <nav>
+    </nav>
+    <section>
+        <aside>
+            <ul class="layui-nav layui-nav-tree layui-nav-side layui-bg-cyan" id="module">
+                <div class="aside_top"><img src="layui/images/timg.jpg" class="layui_nav_img ">
+                    <div class="aside_title">演示诊所</div>
+                </div>
+            </ul>
+        </aside>
+        <article id="article_content">
+        </article>
+    </section>
+    <!--<footer>-->
+    <!--</footer>-->
+    <script src="layui/layui.all.js"></script>
+    <script>
+        // layui.use(['layer', 'form', 'element'], function(){
+        //     var layer = layui.layer;
+        //     var form = layui.form;
+        //     var element = layui.element;
+        // });
+        $(function () {
+            // 加载左侧功能模块
+            $.ajax({
+                type: "POST",
+                url: "./ShowUserPermission.do",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state === 100) {
+                        var length = data.retData.listData.length;
+                        for (var i = 0; i < length; i++) {
+                            // $("#module").append("<li><a href=\"#\" class=\""+data.retData.listData[i].permissionValue+"\" id=\""+data.retData.listData[i].permissionValue+"\">"+data.retData.listData[i].permissionName+"</a></li>");
+                            $("#module").append("<li class=\"layui-nav-item\"><a href=\"#\" class=\"" + data.retData.listData[i].permissionValue + "\" id=\"" + data.retData.listData[i].permissionValue + "\">" + data.retData.listData[i].permissionName + "</a></li>");
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+            // 加载用户设置页面
+            $("#article_content").load("./html/user_setting.html");
+        });
+        // 人员设置
+        $("#module").on("click", ".user_setting", function () {
+            $("#article_content").load("./html/user_setting.html");
+        });
+        // 权限设置
+        $("#module").on("click", ".permission_setting", function () {
+            $("#article_content").load("./html/permission_setting.html");
+        });
+        // 系统设置
+        $("#module").on("click", ".system_setting", function () {
+            $("#article_content").load("./html/system_setting.html");
+        });
+        // 排班
+        $("#module").on("click", ".arrange_class", function () {
+            $("#article_content").load("./html/arrange_class.html");
+        });
+        // 预约
+        $("#module").on("click", ".make_appointment", function () {
+            $("#article_content").load("./html/make_appointment.html");
+        });
+        // 登记
+        $("#module").on("click", ".check_in", function () {
+            $("#article_content").load("./html/check_in.html");
+        });
+        // 分诊
+        $("#module").on("click", ".allot_diagnosis", function () {
+            $("#article_content").load("./html/allot_diagnosis.html");
+        });
+        // 接诊
+        $("#module").on("click", ".receive_diagnosis", function () {
+            $("#article_content").load("./html/receive_diagnosis.html");
+        });
+        // 转诊
+        $("#module").on("click", ".transfer_diagnosis", function () {
+            $("#article_content").load("./html/transfer_diagnosis.html");
+        });
+        // 治疗
+        $("#module").on("click", ".treatment", function () {
+            $("#article_content").load("./html/treatment.html");
+        });
+        // 辅助检查
+        $("#module").on("click", ".accessory_check", function () {
+            $("#article_content").load("./html/accessory_check.html");
+        });
+        // 室验室检查
+        $("#module").on("click", ".laboratory_check", function () {
+            $("#article_content").load("./html/laboratory_check.html");
+        });
+        // 药房
+        $("#module").on("click", ".system_setting", function () {
+            $("#article_content").load("./html/pharmacy.html");
+        });
+        // 结算
+        $("#module").on("click", ".statement", function () {
+            $("#article_content").load("./html/statement.html");
+        });
+        // 修改密码
+        $("#module").on("click", ".edit_password", function () {
+            $("#article_content").load("./html/edit_password.html");
+        });
+
+    </script>
+    </body>
+</html>

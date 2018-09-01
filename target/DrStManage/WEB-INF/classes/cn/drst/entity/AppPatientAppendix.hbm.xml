@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="cn.drst.entity.AppPatientAppendix" table="apppatientappendix" schema="drst_master">
+        <id name="id" column="id"/>
+        <property name="accounts" column="Accounts"/>
+        <property name="password" column="Password"/>
+        <property name="recommendNumber" column="RecommendNumber"/>
+        <property name="recommendLevel" column="RecommendLevel"/>
+        <property name="superiorRecommendNumber" column="SuperiorRecommendNumber"/>
+        <property name="integral" column="Integral"/>
+        <property name="jianYiYuan" column="JianYiYuan"/>
+    </class>
+</hibernate-mapping>

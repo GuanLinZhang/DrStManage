@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> </title>
+    <script src="js/jquery/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <table id="table">
+
+    </table>
+</body>
+<script>
+    $(document).ready(function () {
+        alert("222222222222222");
+        $.ajax({
+            type: "POST",
+            url: "./FindOrganizationDetail.do",
+            dataType: "json",
+            success: function (data) {
+                    alert(data.DataBaseName);
+                    var str;
+                if(data!= null){
+                   str ="<td>"+data.orgnazationNumber+"</td>"+
+                        "<td>"+data.name+"</td>"+
+                        "<td>"+data.address+"</td>"+
+                        "<td>"+data.state+"</td>"+
+                        "<td>"+data.date+"</td>"+
+                        "<td>"+data.DataBaseName+"</td>"+
+                        "<td>"+data.DriverClass+"</td>"+
+                        "<td>"+data.JdbcUrl+"</td>"+
+                        "<td>"+data.UserName+"</td>"+
+                        "<td>"+data.Password+"</td>"
+
+
+
+                }else {
+                    str ="<td>没有数据</td>";
+                }
+                $("#table").html(str)
+
+
+            },
+            error: function () {
+                alert("失败");
+            }
+        })
+    })
+</script>
+</html>

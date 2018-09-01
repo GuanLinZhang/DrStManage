@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="cn.drst.entity.AppMobileDoctorAppendix" table="appmobile_doctorappendix" schema="drst_master">
+        <id name="doctorId" column="DoctorID">
+            <generator class="identity"/>
+        </id>
+        <property name="accounts" column="Accounts"/>
+        <property name="passWord" column="PassWord"/>
+        <property name="starRating" column="StarRating"/>
+        <property name="inquiryNumber" column="InquiryNumber"/>
+        <property name="recommendNumber" column="RecommendNumber"/>
+        <property name="recommendLevel" column="RecommendLevel"/>
+        <property name="superiorRecommendNumber" column="SuperiorRecommendNumber"/>
+        <property name="integral" column="Integral"/>
+        <property name="jianYiYuan" column="JianYiYuan"/>
+        <property name="star" column="Star"/>
+        <property name="sort" column="Sort"/>
+    </class>
+</hibernate-mapping>

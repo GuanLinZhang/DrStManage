@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="cn.drst.entity.MobileToken" table="mobile_token" schema="drst_master">
+        <id name="temporaryToken" column="TemporaryToken"/>
+        <property name="loginToken" column="LoginToken"/>
+        <property name="role" column="Role"/>
+        <property name="name" column="Name"/>
+        <property name="createTime" column="CreateTime"/>
+    </class>
+</hibernate-mapping>

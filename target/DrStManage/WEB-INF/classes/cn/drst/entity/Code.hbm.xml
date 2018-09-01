@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="cn.drst.entity.Code" table="code" schema="drst_master">
+        <composite-id mapped="true" class="cn.drst.entity.CodePK">
+            <key-property name="codeId" column="CodeId"/>
+            <key-property name="typeId" column="TypeId"/>
+        </composite-id>
+        <property name="text" column="Text"/>
+        <property name="value" column="Value"/>
+    </class>
+</hibernate-mapping>

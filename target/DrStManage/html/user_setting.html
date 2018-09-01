@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>健益云</title>
+    <script src="../js/jquery/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <style>
+        .top_div {
+            height: 50px;
+            margin-left: 10px;
+            background-color: #EEEEEE;
+        }
+
+        .top_staffing {
+            float: left;
+            font-size: 20px;
+            margin-top: 13px;
+            color: #000000;
+            margin-left: 50px;
+        }
+
+        .top_img {
+            color: #000000;
+            font-size: 15px;
+            float: right;
+            margin-top: 10px;
+            margin-right: 245px;
+        }
+
+        /*.top_hiddenicon{
+            float: left;
+            margin-top: 12px;
+        }*/
+        .top_personicon_border {
+            border-radius: 50px;
+            border: 2px solid;
+            color: #23262E;
+        }
+
+        .addperson_btn {
+            margin-top: 7px;
+        }
+    </style>
+</head>
+<body>
+<div class="top_div">
+    <!--<a href="#" class="layui-icon top_hiddenicon" id="hid" style="font-size: 30px;">&#xe65f;</a>-->
+    <div class="top_staffing">
+        <i class="layui-icon top_personicon_border"
+           style="font-size: 20px;">&#xe612;</i>
+        人员管理
+    </div>
+    <a href="#" class="top_img" id="exit">
+        <img src="../layui/images/admin.jpg" class="layui-nav-img">注销</a>
+</div>
+<div class="layui-tab layui-tab-card">
+    <ul class="layui-tab-title">
+        <li class="layui-this">人员管理</li>
+        <li>科室管理</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <div class="addperson_btn">
+                <button class="layui-btn" id="addperson">
+                    <i class="layui-icon">&#xe608;</i> 添加人员
+                </button>
+            </div>
+            <table class="layui-table" style="width: 89%;">
+                <colgroup>
+                    <col width="200">
+                    <col width="200">
+                    <col width="200">
+                    <col width="200">
+                    <col width="200">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>人员编号</th>
+                    <th>账　　号</th>
+                    <th>姓　　名</th>
+                    <th>性　　别</th>
+                    <th>联系电话</th>
+                    <th>操　　作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>0101</td>
+                    <td>admin</td>
+                    <td>admin</td>
+                    <td>男</td>
+                    <td>123456789</td>
+                    <td>
+                        <button class="layui-btn " id="edit1">编　辑</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>0101</td>
+                    <td>admin</td>
+                    <td>admin</td>
+                    <td>男</td>
+                    <td>123456789</td>
+                    <td>
+                        <button class="layui-btn " id="edit2">编　辑</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>0101</td>
+                    <td>admin</td>
+                    <td>admin</td>
+                    <td>男</td>
+                    <td>123456789</td>
+                    <td>
+                        <button class="layui-btn " id="edit3">编　辑</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>0101</td>
+                    <td>admin</td>
+                    <td>admin</td>
+                    <td>男</td>
+                    <td>123456789</td>
+                    <td>
+                        <button class="layui-btn " id="edit4">编　辑</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>0101</td>
+                    <td>admin</td>
+                    <td>admin</td>
+                    <td>男</td>
+                    <td>123456789</td>
+                    <td>
+                        <button class="layui-btn " id="edit5">编　辑</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="layui-tab-item">内容2
+            <table class="layui-table" style="width: 89%;">
+                <colgroup>
+                    <col width="300">
+                    <col width="300">
+                    <col width="300">
+                    <col width="300">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>科室编号</th>
+                    <th>科室名称</th>
+                    <th>科室说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1212</td>
+                    <td>外科</td>
+                    <td>无</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="../layui/layui.all.js"></script>
+<script>
+    // layui.use(['layer', 'form', 'element'], function () {
+    //     var layer = layui.layer;
+    //     var form = layui.form;
+    //     var element = layui.element;
+    //     element.render('nav');
+    // });
+    //增加人员
+    $("#addperson").click(function () {
+        $("#article_content", parent.document).load("./html/person_add.html");
+    });
+    // $(function(){
+    //     // 查询所有用户
+    //     $.ajax({
+    //         type: "POST",
+    //         url:"./SearchAllUser.do",
+    //         dataType: "json",
+    //         success:function(data){
+    //             if(data.state === 100){
+    //                 var length = data.retData.listData.length;
+    //                 for(var i = 0; i < length; i++){
+    //                     // 动态创建一个tr行标签,并且转换成jQuery对象
+    //                     var $trTemp = $("<tr></tr>");
+    //                     // 往行里面追加 td单元格
+    //                     $trTemp.append("<td><input name=\"user\" type=\"radio\" value=\""+data.retData.listData[i].userId+"\" /></td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].userId +"</td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].accounts +"</td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].department +"</td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].name +"</td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].sex +"</td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].phone +"</td>");
+    //                     $trTemp.append("<td><input type=\"button\" value=\"解除科室\" onclick=\"clearUserDepartment('" + data.retData.listData[i].userId + "')\"/></td>");
+    //                     $trTemp.appendTo("#tbUser");
+    //                 }
+    //             }else{
+    //                 alert(data.message);
+    //             }
+    //         },
+    //         error:function () {
+    //             alert("失败");
+    //         }
+    //     });
+    //
+    //     // 查询所有科室
+    //     $.ajax({
+    //         type: "POST",
+    //         url:"./SearchAllDepartment.do",
+    //         dataType: "json",
+    //         success:function(data){
+    //             if(data.state === 100){
+    //                 var length = data.retData.listData.length;
+    //                 for(var i = 0; i < length; i++){
+    //                     // 动态创建一个tr行标签,并且转换成jQuery对象
+    //                     var $trTemp = $("<tr></tr>");
+    //                     // 往行里面追加 td单元格
+    //                     $trTemp.append("<td><input name=\"department\" type=\"radio\" value=\""+data.retData.listData[i].departmentId+"\" /></td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].departmentId +"</td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].departmentName +"</td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].departmentExplain +"</td>");
+    //                     $trTemp.appendTo("#tbDepartment");
+    //                 }
+    //             }else{
+    //                 alert(data.message);
+    //             }
+    //         },
+    //         error:function () {
+    //             alert("失败");
+    //         }
+    //     });
+    // });
+    //
+    // // 解除用户科室
+    // function clearUserDepartment(userId) {
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "./ClearUserDepartment.do",
+    //         dataType: "json",
+    //         data: {userId: userId},
+    //         success: function (data) {
+    //             if (data.state === 100) {
+    //                 alert("解除用户科室成功")
+    //             } else {
+    //                 alert(data.message);
+    //             }
+    //         },
+    //         error: function () {
+    //             alert("失败");
+    //         }
+    //     });
+    // }
+    //
+    // // 查询所有用户
+    // $("#SearchUser").click(function () {
+    //     $.ajax({
+    //         type: "POST",
+    //         url:"./SearchAllUser.do",
+    //         dataType: "json",
+    //         success:function(data){
+    //             if(data.state === 100){
+    //                 var length = data.retData.listData.length;
+    //                 for(var i = 0; i < length; i++){
+    //                     // 动态创建一个tr行标签,并且转换成jQuery对象
+    //                     var $trTemp = $("<tr></tr>");
+    //                     // 往行里面追加 td单元格
+    //                     $trTemp.append("<td><input name=\"allot\" type=\"radio\" value=\""+data.retData.listData[i].userId+"\" /></td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].userId +"</td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].accounts +"</td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].department +"</td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].name +"</td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].sex +"</td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].phone +"</td>");
+    //                     $trTemp.append("<td><input type=\"button\" value=\"解除科室\" onclick=\"clearUserDepartment('" + data.retData.listData[i].userId + "')\"/></td>");
+    //                     $trTemp.appendTo("#tbUser");
+    //                 }
+    //             }else{
+    //                 alert(data.message);
+    //             }
+    //         },
+    //         error:function () {
+    //             alert("失败");
+    //         }
+    //     });
+    // });
+    //
+    // // 查询所有科室
+    // $("#SearchDepartment").click(function (){
+    //     $.ajax({
+    //         type: "POST",
+    //         url:"./SearchAllDepartment.do",
+    //         dataType: "json",
+    //         success:function(data){
+    //             if(data.state === 100){
+    //                 var length = data.retData.listData.length;
+    //                 for(var i = 0; i < length; i++){
+    //                     // 动态创建一个tr行标签,并且转换成jQuery对象
+    //                     var $trTemp = $("<tr></tr>");
+    //                     // 往行里面追加 td单元格
+    //                     $trTemp.append("<td><input name=\"department\" type=\"radio\" value=\""+data.retData.listData[i].departmentId+"\" /></td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].departmentId +"</td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].departmentName +"</td>");
+    //                     $trTemp.append("<td>"+ data.retData.listData[i].departmentExplain +"</td>");
+    //                     $trTemp.appendTo("#tbDepartment");
+    //                 }
+    //             }else{
+    //                 alert(data.message);
+    //             }
+    //         },
+    //         error:function () {
+    //             alert("失败");
+    //         }
+    //     });
+    // });
+    //
+    // // 创建新用户
+    // $("#CreateUser").click(function () {
+    //     var json = {accounts: $("#Accounts").val(), name: $("#Name").val(), sex:$("input[name='sex']:checked").val(), phone: $("#Phone").val()};
+    //     $.ajax({
+    //         type: "POST",
+    //         url:"./CreateUser.do",
+    //         contentType: 'application/json',
+    //         dataType: "json",
+    //         data: JSON.stringify(json),//json对象转换json字符串
+    //         success:function(data){
+    //             if(data.state === 100){
+    //                 alert("创建新用户成功");
+    //             }else{
+    //                 alert(data.message);
+    //             }
+    //         },
+    //         error:function () {
+    //             alert("失败");
+    //         }
+    //     });
+    // });
+    //
+    // // 创建新科室
+    // $("#CreateDepartment").click(function () {
+    //     var json = {departmentName: $("#DepartmentName").val(), departmentExplain: $("#DepartmentExplain").val()};
+    //     $.ajax({
+    //         type: "POST",
+    //         url:"./CreateDepartment.do",
+    //         contentType: 'application/json',
+    //         dataType: "json",
+    //         data: JSON.stringify(json),//json对象转换json字符串
+    //         success:function(data){
+    //             if(data.state === 100){
+    //                 alert("创建新科室成功");
+    //             }else{
+    //                 alert(data.message);
+    //             }
+    //         },
+    //         error:function () {
+    //             alert("失败");
+    //         }
+    //     });
+    // });
+    //
+    // // 分配用户科室
+    // $("#AllotUserDepartment").click(function () {
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "./AllotUserDepartment.do",
+    //         dataType: "json",
+    //         traditional: true, //traditional 为true阻止深度序列化
+    //         data: {
+    //             userId: $("input:radio[name='user']:checked").val(),
+    //             departmentId: $("input:radio[name='department']:checked").val()
+    //         },
+    //         success: function (data) {
+    //             if (data.state === 100) {
+    //                 alert("分配科室成功");
+    //             } else {
+    //                 alert(data.message)
+    //             }
+    //         },
+    //         error: function () {
+    //             alert("失败");
+    //         }
+    //     });
+    // });
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>健益云</title>
+    <script src="../js/jquery/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <span>这个是管理后台的登录页面</span>
+    <br>
+    <br>
+    <div>
+        <label>诊所名称：</label><input type="text" id="ClinicName"/>
+        <br>
+        <label>诊所地址：</label><input type="text" id="ClinicAddress"/>
+        <br><br>
+        <input type="button" id="CreateClinic" value="创建诊所"/>
+        <br><br>
+        <label>机构编号：</label><label id="OrganizationNumber"></label>
+    </div>
+    <script>
+        $(function(){
+        });
+
+        $("#CreateClinic").click(function () {
+            // json里的字段名一定要和entity里的一样
+            var json = {clinicName:$("#ClinicName").val(), clinicAddress:$("#ClinicAddress").val()};
+            // url:"../"是根目录，".do"是在Web.xml中配置
+            $.ajax({
+                type: "POST",
+                url:"../manage/CreateClinic.do",
+                contentType : 'application/json',
+                dataType: "json",
+                data : JSON.stringify(json),//json对象转换json字符串
+                success:function(data){
+                    if(data.state === 100){
+                        $("#OrganizationNumber").html(data.retData.listData[0].organizationNumber);
+                    }else{
+                        alert(data.message);
+                    }
+                },
+                error:function (data) {
+                    alert("失败");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

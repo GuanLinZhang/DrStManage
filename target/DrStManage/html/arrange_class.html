@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>健益云</title>
+    <script src="../js/jquery/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    这个页面是排班页面
+    <br><br>
+    <select id="DepartmentList">
+        <option value="">选择科室</option>
+    </select>
+    <select id="UserList">
+        <option value="">选择人员</option>
+    </select>
+    <input type="button" id="Search" value="查询"/>
+    <br><br>
+    <input type="button" id="ThisWeek" value="本周"/><span>　　　　　　　　　　</span>
+    <span id="BeginYear"></span><span id="BeginMonthDay"></span><span> - </span><span id="EndYear"></span><span id="EndMonthDay"></span>
+    <span>　　　　　　　　　　</span>
+    <input type="button" id="SaveArrangeClasses" value="保存排班"/>
+    <br><br>
+    <table>
+        <thead id="thClasses">
+        </thead>
+        <tbody id="tbClasses">
+        </tbody>
+    </table>
+    <br><br>
+    <span>===============================================================</span>
+    <br><br>
+    <label>班次名称：</label><input type="text" id="ClassesName"/>
+    <br><br>
+    <input type="button" id="CreateClasses" value="新建班次"/>
+    <br><br>
+    <script>
+        $(function(){
+            // 查询科室数据
+            $.ajax({
+                type: "POST",
+                url:"./SearchAllDepartment.do",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state === 100) {
+                        var length = data.retData.listData.length;
+                        for(var i = 0; i < length; i++){
+                            $("#DepartmentList").append("<option value=\""+data.retData.listData[0].departmentId+"\">"+data.retData.listData[0].departmentName+"</option>");
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+
+            // 查询人员数据
+            $.ajax({
+                type: "POST",
+                url:"./SearchAllUser.do",
+                dataType: "json",
+                success:function(data){
+                    if(data.state === 100){
+                        var length = data.retData.listData.length;
+                        for(var i = 0; i < length; i++){
+                            $("#UserList").append("<option value=\""+data.retData.listData[i].userId+"\">"+data.retData.listData[i].name+"</option>");
+                        }
+                    }else{
+                        alert(data.message);
+                    }
+                },
+                error:function () {
+                    alert("失败");
+                }
+            });
+
+            // 查询日期表示
+            $.ajax({
+                type: "POST",
+                url: "./GetThisWeek.do",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state === 100) {
+                        $("#BeginYear").html(data.retData.listData[0].beginYear);
+                        $("#BeginMonthDay").html(data.retData.listData[0].beginMonthDay);
+                        $("#EndYear").html(data.retData.listData[0].endYear);
+                        $("#EndMonthDay").html(data.retData.listData[0].endMonthDay);
+
+                        $("#thClasses").html("");
+                        var $trThTemp = $("<tr></tr>");
+                        // 往行里面追加 td单元格
+                        $trThTemp.append("<th>人员</th>");
+                        $trThTemp.append("<th>"+ data.retData.listData[0].mondayDate +"</th>");
+                        $trThTemp.append("<th>"+ data.retData.listData[0].tuesdayDate +"</th>");
+                        $trThTemp.append("<th>"+ data.retData.listData[0].wednesdayDate +"</th>");
+                        $trThTemp.append("<th>"+ data.retData.listData[0].thursdayDate +"</th>");
+                        $trThTemp.append("<th>"+ data.retData.listData[0].fridayDate +"</th>");
+                        $trThTemp.append("<th>"+ data.retData.listData[0].saturdayDate +"</th>");
+                        $trThTemp.append("<th>"+ data.retData.listData[0].sundayDate +"</th>");
+                        $trThTemp.appendTo("#thClasses");
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+
+            // 列表数据查询
+            $.ajax({
+                type: "POST",
+                url: "./GetThisWeekUserClasses.do",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state === 100) {
+                        $("#tbClasses").html("");
+                        var dataLength = data.retData.listData[0].userClasses.length;
+                        for(var i = 0; i < dataLength; i++){
+                            var $trTbTemp = $("<tr></tr>");
+                            // 往行里面追加 td单元格
+                            $trTbTemp.append("<td style=\"display:none;\">" + data.retData.listData[0].userClasses[i].userId + "</td>");
+                            $trTbTemp.append("<td>" + data.retData.listData[0].userClasses[i].name + "</td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_0\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_1\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_2\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_3\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_4\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_5\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_6\"></td>");
+                            $trTbTemp.appendTo("#tbClasses");
+
+                            // 创建select
+                            for(var k = 0; k < 7; k++){
+                                $(".Select_" + i + "_" + k).append("<select id=\"Classes_" + i + "_" + k + "\" class=\"ClassesList Classes_"+i+"\"></select>");
+                            }
+                            var optionLength = data.retData.listData[0].classes.classesValue.length;
+                            for(var j = 0; j < optionLength; j++){
+                                // 添加选项
+                                $("<option></option>").val(data.retData.listData[0].classes.classesValue[j])
+                                    .text(data.retData.listData[0].classes.classesText[j])
+                                    .appendTo($(".Classes_" + i));
+                            }
+
+                            // 设置默认选项
+                            if(data.retData.listData[0].userClasses[i].mondayValue !== ""){
+                                $("#Classes_" + i + "_0").val(data.retData.listData[0].userClasses[i].mondayValue);
+                            }else{
+                                $("#Classes_" + i + "_0").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].tuesdayValue !== ""){
+                                $("#Classes_" + i + "_1").val(data.retData.listData[0].userClasses[i].tuesdayValue);
+                            }else{
+                                $("#Classes_" + i + "_1").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].wednesdayValue !== ""){
+                                $("#Classes_" + i + "_2").val(data.retData.listData[0].userClasses[i].wednesdayValue);
+                            }else{
+                                $("#Classes_" + i + "_2").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].thursdayValue !== ""){
+                                $("#Classes_" + i + "_3").val(data.retData.listData[0].userClasses[i].thursdayValue);
+                            }else{
+                                $("#Classes_" + i + "_3").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].fridayValue !== ""){
+                                $("#Classes_" + i + "_4").val(data.retData.listData[0].userClasses[i].fridayValue);
+                            }else{
+                                $("#Classes_" + i + "_4").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].saturdayValue !== ""){
+                                $("#Classes_" + i + "_5").val(data.retData.listData[0].userClasses[i].saturdayValue);
+                            }else{
+                                $("#Classes_" + i + "_5").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].sundayValue !== ""){
+                                $("#Classes_" + i + "_6").val(data.retData.listData[0].userClasses[i].sundayValue);
+                            }else{
+                                $("#Classes_" + i + "_6").val("C0000");
+                            }
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 新建班次
+        $("#CreateClasses").click(function () {
+            var json = {classesName: $("#ClassesName").val()};
+            $.ajax({
+                type: "POST",
+                url:"./CreateClasses.do",
+                contentType: 'application/json',
+                dataType: "json",
+                data: JSON.stringify(json),//json对象转换json字符串
+                success:function(data){
+                    if(data.state === 100){
+                        alert("新建班次成功");
+                    }else{
+                        alert(data.message);
+                    }
+                },
+                error:function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 保存排班
+        $("#SaveArrangeClasses").click(function () {
+            var list = [];
+            //循环所有行获取列
+            $("#tbClasses").find("tr").each(function(){
+                var userId = $(this).find("td").eq(0).text();
+                var monday = $(this).find("td").eq(2).find("select").val();
+                var tuesday = $(this).find("td").eq(3).find("select").val();
+                var wednesday = $(this).find("td").eq(4).find("select").val();
+                var thursday = $(this).find("td").eq(5).find("select").val();
+                var friday = $(this).find("td").eq(6).find("select").val();
+                var saturday = $(this).find("td").eq(7).find("select").val();
+                var sunday = $(this).find("td").eq(8).find("select").val();
+                list.push({userId:userId,monday:monday,tuesday:tuesday, wednesday:wednesday, thursday:thursday, friday:friday, saturday:saturday, sunday:sunday });
+            });
+            $.ajax({
+                type: "POST",
+                url:"./SaveArrangeClasses.do",
+                contentType: 'application/json',
+                dataType: "json",
+                data: JSON.stringify(list),//json对象转换json字符串
+                success:function(data){
+                    if(data.state === 100){
+                        alert("保存排班成功");
+                    }else{
+                        alert(data.message);
+                    }
+                },
+                error:function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 本周
+        $("#ThisWeek").click(function () {
+            // 查询日期表示
+            $.ajax({
+                type: "POST",
+                url: "./GetThisWeek.do",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state === 100) {
+                        $("#BeginYear").html(data.retData.listData[0].beginYear);
+                        $("#BeginMonthDay").html(data.retData.listData[0].beginMonthDay);
+                        $("#EndYear").html(data.retData.listData[0].endYear);
+                        $("#EndMonthDay").html(data.retData.listData[0].endMonthDay);
+                        $("#thClasses").html("");
+                        var $trThTemp = $("<tr></tr>");
+                        // 往行里面追加 td单元格
+                        $trThTemp.append("<th>人员</th>");
+                        $trThTemp.append("<th>"+ data.retData.listData[0].mondayDate +"</th>");
+                        $trThTemp.append("<th>"+ data.retData.listData[0].tuesdayDate +"</th>");
+                        $trThTemp.append("<th>"+ data.retData.listData[0].wednesdayDate +"</th>");
+                        $trThTemp.append("<th>"+ data.retData.listData[0].thursdayDate +"</th>");
+                        $trThTemp.append("<th>"+ data.retData.listData[0].fridayDate +"</th>");
+                        $trThTemp.append("<th>"+ data.retData.listData[0].saturdayDate +"</th>");
+                        $trThTemp.append("<th>"+ data.retData.listData[0].sundayDate +"</th>");
+                        $trThTemp.appendTo("#thClasses");
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+
+            // 列表数据查询
+            $.ajax({
+                type: "POST",
+                url: "./GetThisWeekUserClasses.do",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state === 100) {
+                        $("#tbClasses").html("");
+                        var dataLength = data.retData.listData[0].userClasses.length;
+                        for(var i = 0; i < dataLength; i++){
+                            var $trTbTemp = $("<tr></tr>");
+                            // 往行里面追加 td单元格
+                            $trTbTemp.append("<td style=\"display:none;\">" + data.retData.listData[0].userClasses[i].userId + "</td>");
+                            $trTbTemp.append("<td>" + data.retData.listData[0].userClasses[i].name + "</td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_0\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_1\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_2\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_3\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_4\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_5\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_6\"></td>");
+                            $trTbTemp.appendTo("#tbClasses");
+
+                            // 创建select
+                            for(var k = 0; k < 7; k++){
+                                $(".Select_" + i + "_" + k).append("<select id=\"Classes_" + i + "_" + k + "\" class=\"ClassesList Classes_"+i+"\"></select>");
+                            }
+                            var optionLength = data.retData.listData[0].classes.classesValue.length;
+                            for(var j = 0; j < optionLength; j++){
+                                // 添加选项
+                                $("<option></option>").val(data.retData.listData[0].classes.classesValue[j])
+                                    .text(data.retData.listData[0].classes.classesText[j])
+                                    .appendTo($(".Classes_" + i));
+                            }
+
+                            // 设置默认选项
+                            if(data.retData.listData[0].userClasses[i].mondayValue !== ""){
+                                $("#Classes_" + i + "_0").val(data.retData.listData[0].userClasses[i].mondayValue);
+                            }else{
+                                $("#Classes_" + i + "_0").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].tuesdayValue !== ""){
+                                $("#Classes_" + i + "_1").val(data.retData.listData[0].userClasses[i].tuesdayValue);
+                            }else{
+                                $("#Classes_" + i + "_1").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].wednesdayValue !== ""){
+                                $("#Classes_" + i + "_2").val(data.retData.listData[0].userClasses[i].wednesdayValue);
+                            }else{
+                                $("#Classes_" + i + "_2").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].thursdayValue !== ""){
+                                $("#Classes_" + i + "_3").val(data.retData.listData[0].userClasses[i].thursdayValue);
+                            }else{
+                                $("#Classes_" + i + "_3").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].fridayValue !== ""){
+                                $("#Classes_" + i + "_4").val(data.retData.listData[0].userClasses[i].fridayValue);
+                            }else{
+                                $("#Classes_" + i + "_4").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].saturdayValue !== ""){
+                                $("#Classes_" + i + "_5").val(data.retData.listData[0].userClasses[i].saturdayValue);
+                            }else{
+                                $("#Classes_" + i + "_5").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].sundayValue !== ""){
+                                $("#Classes_" + i + "_6").val(data.retData.listData[0].userClasses[i].sundayValue);
+                            }else{
+                                $("#Classes_" + i + "_6").val("C0000");
+                            }
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+
+        // 改变科室取得人员排班
+        $("#DepartmentList").change(function(){
+            // 列表数据查询
+            $.ajax({
+                type: "POST",
+                url: "./GetUserClassesChangeDepartment.do",
+                dataType: "json",
+                traditional: true, //traditional 为true阻止深度序列化
+                data: {
+                    departmentId: $("#DepartmentList").val()
+                },
+                success: function (data) {
+                    if (data.state === 100) {
+                        $("#tbClasses").html("");
+                        var dataLength = data.retData.listData[0].userClasses.length;
+                        for(var i = 0; i < dataLength; i++){
+                            var $trTbTemp = $("<tr></tr>");
+                            // 往行里面追加 td单元格
+                            $trTbTemp.append("<td style=\"display:none;\">" + data.retData.listData[0].userClasses[i].userId + "</td>");
+                            $trTbTemp.append("<td>" + data.retData.listData[0].userClasses[i].name + "</td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_0\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_1\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_2\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_3\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_4\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_5\"></td>");
+                            $trTbTemp.append("<td class=\"Select_"+i+"_6\"></td>");
+                            $trTbTemp.appendTo("#tbClasses");
+
+                            // 创建select
+                            for(var k = 0; k < 7; k++){
+                                $(".Select_" + i + "_" + k).append("<select id=\"Classes_" + i + "_" + k + "\" class=\"ClassesList Classes_"+i+"\"></select>");
+                            }
+                            var optionLength = data.retData.listData[0].classes.classesValue.length;
+                            for(var j = 0; j < optionLength; j++){
+                                // 添加选项
+                                $("<option></option>").val(data.retData.listData[0].classes.classesValue[j])
+                                    .text(data.retData.listData[0].classes.classesText[j])
+                                    .appendTo($(".Classes_" + i));
+                            }
+
+                            // 设置默认选项
+                            if(data.retData.listData[0].userClasses[i].mondayValue !== ""){
+                                $("#Classes_" + i + "_0").val(data.retData.listData[0].userClasses[i].mondayValue);
+                            }else{
+                                $("#Classes_" + i + "_0").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].tuesdayValue !== ""){
+                                $("#Classes_" + i + "_1").val(data.retData.listData[0].userClasses[i].tuesdayValue);
+                            }else{
+                                $("#Classes_" + i + "_1").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].wednesdayValue !== ""){
+                                $("#Classes_" + i + "_2").val(data.retData.listData[0].userClasses[i].wednesdayValue);
+                            }else{
+                                $("#Classes_" + i + "_2").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].thursdayValue !== ""){
+                                $("#Classes_" + i + "_3").val(data.retData.listData[0].userClasses[i].thursdayValue);
+                            }else{
+                                $("#Classes_" + i + "_3").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].fridayValue !== ""){
+                                $("#Classes_" + i + "_4").val(data.retData.listData[0].userClasses[i].fridayValue);
+                            }else{
+                                $("#Classes_" + i + "_4").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].saturdayValue !== ""){
+                                $("#Classes_" + i + "_5").val(data.retData.listData[0].userClasses[i].saturdayValue);
+                            }else{
+                                $("#Classes_" + i + "_5").val("C0000");
+                            }
+                            if(data.retData.listData[0].userClasses[i].sundayValue !== ""){
+                                $("#Classes_" + i + "_6").val(data.retData.listData[0].userClasses[i].sundayValue);
+                            }else{
+                                $("#Classes_" + i + "_6").val("C0000");
+                            }
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>staffing</title>
+    <script src="../js/jquery/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <style>
+        body {
+            background-color: #EEEEEE;
+        }
+
+        .top_div {
+            height: 110px;
+            margin-left: 10px;
+            background-color: #EEEEEE;
+        }
+
+        /*.top_hiddenicon{
+            float: left;
+            margin-top: 13px;
+        }*/
+        .top_img {
+            color: #000000;
+            font-size: 15px;
+            float: right;
+            margin-top: 13px;
+            margin-right: 245px;
+        }
+
+        .top_sub_div {
+            width: 99%;
+            height: 50px;
+            margin-left: 10px;
+            background-color: #FFFFFF;
+            float: left;
+            margin-top: 5px;
+        }
+
+        .top_sub_staffing {
+            float: left;
+            font-size: 18px;
+            margin-top: 13px;
+            color: #000000;
+            margin-left: 10px;
+        }
+
+        .top_sub_personicon_border {
+            border-radius: 50px;
+            border: 2px solid;
+            color: #23262E;
+        }
+
+        .content_div {
+            width: 100%;
+            background-color: #EEEEEE;
+            margin-top: 8px;
+        }
+
+        .content_mid_div {
+            width: 87%;
+            margin-left: 25px;
+            background-color: #FFFFFF;
+
+        }
+
+        .content_top {
+            width: 100%;
+            height: 45px;
+        }
+
+        .content_title {
+            margin-left: 1%;
+            padding-top: 17px;
+            font-size: 17px;
+        }
+
+        .content_num {
+            margin-top: 35px;
+        }
+
+        .content_password {
+
+            margin-top: 30px;
+            margin-left: 115px;
+        }
+
+        .content_name {
+            margin-top: 30px;
+        }
+
+        .content_sex {
+            margin-top: 20px;
+        }
+
+        .content_tel {
+            margin-top: 30px;
+        }
+
+        .content_complete_btn {
+            margin-top: 70px;
+            margin-left: 3%;
+        }
+
+        .content_title_back_btn {
+            float: right;
+            margin-right: 25px;
+        }
+    </style>
+</head>
+<body>
+<div class="top_div">
+    <!--<a href="#" class="layui-icon top_hiddenicon" id="aside_hidden"style="font-size: 30px;">&#xe65f;</a>-->
+    <a href="#" class="top_img"><img src="../layui/images/admin.jpg" class="layui-nav-img"></a>
+    <div class="top_sub_div">
+        <div class="top_sub_staffing">
+            <i class="layui-icon  top_sub_personicon_border" style="font-size: 18px;">&#xe612;</i>
+            人员管理
+        </div>
+    </div>
+</div>
+<div class="content_div">
+    <div class="content_mid_div">
+        <div class="content_top">
+            <div class="content_title">添加人员
+                <div class="content_title_back_btn">
+                    <a href="#" class="layui-btn layui-btn-sm" id="back">
+                        <i class="layui-icon ">&#xe65c;</i> 返回
+                    </a>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <div class="content_num">
+            <label class="layui-form-label">账　号　</label>
+            <div class="layui-input-inline">
+                <input type="text" name="title" style="width:600px"
+                       placeholder="请输入新增人员账号" autocomplete="off" class="layui-input">
+            </div>
+            <div class="content_password">账号默认初始密码：111111</div>
+        </div>
+        <div class="content_name ">
+            <label class="layui-form-label">姓　名　</label>
+            <div class="layui-input-inline">
+                <input type="text" name="title" style="width:600px"
+                       placeholder="请输入新增人员姓名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        　
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="content_sex">
+                    <label class="layui-form-label">性　别　</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="sex" value="男" title="男">
+                        <input type="radio" name="sex" value="女" title="女" checked>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content_tel ">
+            <label class="layui-form-label">联系电话</label>
+            <div class="layui-input-inline">
+                <input type="text" name="title" style="width:600px"
+                       placeholder="请输入新增人员电话" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="content_complete_btn">
+            <button class="layui-btn layui-btn-radius"
+                    style="width:400px ">完成创建
+            </button>
+        </div>
+        <br>
+        <br>
+        <br>
+    </div>
+</div>
+<script src="../layui/layui.all.js"></script>
+<script>
+    // layui.use(['form', 'element'], function () {
+    //     var form = layui.form;
+    //     var element = layui.element;
+    //     form.render();
+    //     element.render();
+    // });
+    $("#back").click(function () {
+        $("#article_content", parent.document).load("./html/user_setting.html");
+    });
+</script>
+</body>
+</html>
